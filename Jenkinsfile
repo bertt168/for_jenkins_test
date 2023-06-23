@@ -1,17 +1,25 @@
+//Jenkinsfile (Declarative Pipeline)
 pipeline {
     agent any
-		//指定什麼條件的 agent 可以執行這個專案，any 表示不指定，
-        //讓 Jenkins 為你的建置工作找到一個 label 為 ec2 的 node ，
-		//連線到該 ec2 node 的 ssh agent ，然後直接在上面運行你的建置 (Build)
-		// agent {
-		//     node {
-		//         label 'ec2'
-		//     }
-		// }
-    stages { //是一個集合，裡面可以包含很多個stage
-        stage('hello world') {
-            steps {
-                echo 'hello from Pipeline'
+		tools {
+            // 工具名稱必須在Jenkins 管理Jenkins → 全域性工具設定中預設定。
+            // maven name 跟 jdk mane 都是抓剛剛在 Global Tool Configuration 設定的name
+            maven 'maven 3.8.2'
+            jdk 'JDK 1.8'
+        }
+    stages { // 運行，為由上到下。當然也有進階的應用是可以平行處理的
+        stage('Practice') {
+            parallel {
+                stage('Stage1') {
+                    steps {
+                        echo 'Testing..1'
+                    }
+                }
+                stage('Stage2') {
+                    steps {
+                        echo 'Testing..2'
+                    }
+                }
             }
         }
     }
